@@ -20,18 +20,18 @@
     },
     "autoload": {
         "psr-4": {
-            "EeqanLtd\\FilamentCommandRunner\\": "src/"
+            "Amanank\\FilamentCommandRunner\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "EeqanLtd\\FilamentCommandRunner\\Tests\\": "tests/"
+            "Amanank\\FilamentCommandRunner\\Tests\\": "tests/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "EeqanLtd\\FilamentCommandRunner\\Providers\\FilamentCommandRunnerServiceProvider"
+                "Amanank\\FilamentCommandRunner\\Providers\\FilamentCommandRunnerServiceProvider"
             ]
         }
     },
