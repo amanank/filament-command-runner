@@ -1,12 +1,12 @@
 {
-    "name": "eeqan-ltd/filament-command-runner",
+    "name": "amanank/filament-command-runner",
     "description": "A reusable Composer package that provides a secure, extensible Filament UI for running predefined Artisan commands.",
     "type": "library",
     "license": "MIT",
     "authors": [
         {
-            "name": "Eeqan Ltd",
-            "email": "info@eeqan.com"
+            "name": "Amanank",
+            "email": "info@amanank.com"
         }
     ],
     "require": {
