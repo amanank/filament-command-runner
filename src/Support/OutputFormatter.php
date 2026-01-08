@@ -1,6 +1,6 @@
 <?php
 
-namespace EeqanLtd\FilamentCommandRunner\Support;
+namespace Amanank\FilamentCommandRunner\Support;
 
 use Illuminate\Support\HtmlString;
 
@@ -30,7 +30,7 @@ class OutputFormatter {
         if ($showCopyButton) {
             $html .= "
                     <div class='absolute top-2 right-2'>
-                        <button onclick='navigator.clipboard.writeText(this.parentElement.previousElementSibling.textContent)' 
+                        <button onclick='navigator.clipboard.writeText(this.parentElement.previousElementSibling.textContent)'
                                 class='text-gray-400 hover:text-white text-xs bg-gray-800 px-2 py-1 rounded'>
                             Copy
                         </button>

@@ -1,8 +1,8 @@
 <?php
 
-namespace EeqanLtd\FilamentCommandRunner\Services;
+namespace Amanank\FilamentCommandRunner\Services;
 
-use EeqanLtd\FilamentCommandRunner\Abstractions\CommandRunnerInterface;
+use Amanank\FilamentCommandRunner\Abstractions\CommandRunnerInterface;
 use Illuminate\Support\Collection;
 
 /**

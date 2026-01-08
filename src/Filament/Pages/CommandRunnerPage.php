@@ -1,10 +1,10 @@
 <?php
 
-namespace EeqanLtd\FilamentCommandRunner\Filament\Pages;
+namespace Amanank\FilamentCommandRunner\Filament\Pages;
 
-use EeqanLtd\FilamentCommandRunner\Services\CommandRegistry;
-use EeqanLtd\FilamentCommandRunner\Services\EloquentQueryRunner;
-use EeqanLtd\FilamentCommandRunner\Support\OutputFormatter;
+use Amanank\FilamentCommandRunner\Services\CommandRegistry;
+use Amanank\FilamentCommandRunner\Services\EloquentQueryRunner;
+use Amanank\FilamentCommandRunner\Support\OutputFormatter;
 use Filament\Pages\Page;
 use Filament\Forms\Form;
 use Filament\Forms\Components\Select;

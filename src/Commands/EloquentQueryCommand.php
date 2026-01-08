@@ -1,10 +1,10 @@
 <?php
 
-namespace EeqanLtd\FilamentCommandRunner\Commands;
+namespace Amanank\FilamentCommandRunner\Commands;
 
-use EeqanLtd\FilamentCommandRunner\Abstractions\AbstractCommandRunner;
-use EeqanLtd\FilamentCommandRunner\Services\EloquentQueryRunner;
-use EeqanLtd\FilamentCommandRunner\Support\OutputFormatter;
+use Amanank\FilamentCommandRunner\Abstractions\AbstractCommandRunner;
+use Amanank\FilamentCommandRunner\Services\EloquentQueryRunner;
+use Amanank\FilamentCommandRunner\Support\OutputFormatter;
 use InvalidArgumentException;
 
 /**

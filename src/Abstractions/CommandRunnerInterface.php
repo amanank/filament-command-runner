@@ -1,6 +1,6 @@
 <?php
 
-namespace EeqanLtd\FilamentCommandRunner\Abstractions;
+namespace Amanank\FilamentCommandRunner\Abstractions;
 
 /**
  * Interface for executable commands in the Command Runner

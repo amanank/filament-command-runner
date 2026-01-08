@@ -1,9 +1,9 @@
 <?php
 
-namespace EeqanLtd\FilamentCommandRunner\Commands;
+namespace Amanank\FilamentCommandRunner\Commands;
 
-use EeqanLtd\FilamentCommandRunner\Abstractions\AbstractCommandRunner;
-use EeqanLtd\FilamentCommandRunner\Support\OutputFormatter;
+use Amanank\FilamentCommandRunner\Abstractions\AbstractCommandRunner;
+use Amanank\FilamentCommandRunner\Support\OutputFormatter;
 use Illuminate\Support\Facades\Artisan;
 use Symfony\Component\Console\Output\BufferedOutput;
 

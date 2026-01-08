@@ -4,14 +4,14 @@ A reusable, extensible Laravel package that provides a secure Filament UI for ex
 
 ## Features
 
-✅ **Secure** - No arbitrary shell execution, validated command registry  
-✅ **Extensible** - Create new commands by extending `AbstractCommandRunner`  
-✅ **Permission-Aware** - Integrates with Filament Shield and standard policies  
-✅ **Risk Management** - Configurable danger levels (low/medium/high) with confirmations  
-✅ **Output Formatting** - ANSI color support, syntax highlighting, downloadable logs  
-✅ **Environment-Based** - Restrict commands per environment (production, staging, etc.)  
-✅ **Audit Logging** - Optional database logging of all command executions  
-✅ **Auto-Discovery** - Optionally discover commands from your Laravel app  
+✅ **Secure** - No arbitrary shell execution, validated command registry
+✅ **Extensible** - Create new commands by extending `AbstractCommandRunner`
+✅ **Permission-Aware** - Integrates with Filament Shield and standard policies
+✅ **Risk Management** - Configurable danger levels (low/medium/high) with confirmations
+✅ **Output Formatting** - ANSI color support, syntax highlighting, downloadable logs
+✅ **Environment-Based** - Restrict commands per environment (production, staging, etc.)
+✅ **Audit Logging** - Optional database logging of all command executions
+✅ **Auto-Discovery** - Optionally discover commands from your Laravel app
 
 ## Requirements
 
@@ -48,7 +48,7 @@ composer require eeqan-ltd/filament-command-runner:@dev
 ### 3. Publish Configuration
 
 ```bash
-php artisan vendor:publish --provider="EeqanLtd\\FilamentCommandRunner\\Providers\\FilamentCommandRunnerServiceProvider"
+php artisan vendor:publish --provider="Amanank\\FilamentCommandRunner\\Providers\\FilamentCommandRunnerServiceProvider"
 ```
 
 This will publish:
@@ -71,7 +71,7 @@ Add the Command Runner page to your Filament panel configuration:
 
 'pages' => [
     // ... other pages
-    \EeqanLtd\FilamentCommandRunner\Filament\Pages\CommandRunnerPage::class,
+    \Amanank\FilamentCommandRunner\Filament\Pages\CommandRunnerPage::class,
 ],
 ```
 
@@ -82,7 +82,7 @@ If you have app-specific commands, register them in your app service provider:
 ```php
 // app/Providers/CommandRunnerServiceProvider.php or AppServiceProvider
 
-use EeqanLtd\FilamentCommandRunner\Services\CommandRegistry;
+use Amanank\FilamentCommandRunner\Services\CommandRegistry;
 use App\Console\Commands\YourCustomCommand;
 
 public function boot(): void {
@@ -119,7 +119,7 @@ Create a command by extending `AbstractCommandRunner`:
 
 namespace App\CommandRunner\Commands;
 
-use EeqanLtd\FilamentCommandRunner\Abstractions\AbstractCommandRunner;
+use Amanank\FilamentCommandRunner\Abstractions\AbstractCommandRunner;
 
 class MyCustomCommand extends AbstractCommandRunner {
     protected string $commandName = 'custom:my-command';
@@ -141,10 +141,10 @@ class MyCustomCommand extends AbstractCommandRunner {
 
     public function execute(array $options): string {
         $parameter = $options['parameter'];
-        
+
         // Your logic here
         $output = "Processing {$parameter}...\n";
-        
+
         return $output;
     }
 }
@@ -160,7 +160,7 @@ class MyCustomCommand extends AbstractCommandRunner {
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use EeqanLtd\FilamentCommandRunner\Services\CommandRegistry;
+use Amanank\FilamentCommandRunner\Services\CommandRegistry;
 use App\CommandRunner\Commands\MyCustomCommand;
 
 class AppServiceProvider extends ServiceProvider {
@@ -187,8 +187,8 @@ Add to `config/filament-command-runner.php`:
 
 namespace App\CommandRunner\Commands;
 
-use EeqanLtd\FilamentCommandRunner\Abstractions\AbstractCommandRunner;
-use EeqanLtd\FilamentCommandRunner\Support\OutputFormatter;
+use Amanank\FilamentCommandRunner\Abstractions\AbstractCommandRunner;
+use Amanank\FilamentCommandRunner\Support\OutputFormatter;
 use App\Models\User;
 use InvalidArgumentException;
 
@@ -219,7 +219,7 @@ class SyncDatabaseCommand extends AbstractCommandRunner {
 
     public function validateOptions(array $options): void {
         parent::validateOptions($options);
-        
+
         // Custom validation logic
         if ($options['limit'] > 1000 && !app()->environment('local')) {
             throw new InvalidArgumentException('Limit cannot exceed 1000 in non-local environments');
@@ -239,9 +239,9 @@ class SyncDatabaseCommand extends AbstractCommandRunner {
             $limit = (int)$options['limit'];
 
             $users = User::limit($limit)->get();
-            
+
             $output .= "📊 Processing " . $users->count() . " records\n";
-            
+
             if ($dryRun) {
                 $output .= "🔍 DRY RUN: No changes will be made\n";
                 $output .= "Changes that would be made:\n";
@@ -252,7 +252,7 @@ class SyncDatabaseCommand extends AbstractCommandRunner {
             foreach ($users as $user) {
                 // Simulate processing
                 $output .= "  ✓ {$user->name}\n";
-                
+
                 if (!$dryRun) {
                     // Apply changes
                 }
@@ -419,7 +419,7 @@ You can extend the `CommandRunnerPage` to customize the UI:
 
 namespace App\Filament\Pages;
 
-use EeqanLtd\FilamentCommandRunner\Filament\Pages\CommandRunnerPage as BaseCommandRunnerPage;
+use Amanank\FilamentCommandRunner\Filament\Pages\CommandRunnerPage as BaseCommandRunnerPage;
 
 class CustomCommandRunnerPage extends BaseCommandRunnerPage {
     protected static ?string $navigationGroup = 'Tools';
@@ -432,7 +432,7 @@ class CustomCommandRunnerPage extends BaseCommandRunnerPage {
 Use the `OutputFormatter` utility:
 
 ```php
-use EeqanLtd\FilamentCommandRunner\Support\OutputFormatter;
+use Amanank\FilamentCommandRunner\Support\OutputFormatter;
 
 $output = OutputFormatter::formatExecutionMetadata(
     'command:name',
@@ -467,7 +467,7 @@ $output .= OutputFormatter::formatExecutionFooter(1.23, 0);
 ## Testing
 
 ```php
-use EeqanLtd\FilamentCommandRunner\Services\CommandRegistry;
+use Amanank\FilamentCommandRunner\Services\CommandRegistry;
 
 // Register a test command
 CommandRegistry::register(MyTestCommand::class);

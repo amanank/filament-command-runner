@@ -1,6 +1,6 @@
 <?php
 
-namespace EeqanLtd\FilamentCommandRunner\Services;
+namespace Amanank\FilamentCommandRunner\Services;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;

@@ -1,9 +1,9 @@
 <?php
 
-namespace EeqanLtd\FilamentCommandRunner\Providers;
+namespace Amanank\FilamentCommandRunner\Providers;
 
-use EeqanLtd\FilamentCommandRunner\Commands\EloquentQueryCommand;
-use EeqanLtd\FilamentCommandRunner\Services\CommandRegistry;
+use Amanank\FilamentCommandRunner\Commands\EloquentQueryCommand;
+use Amanank\FilamentCommandRunner\Services\CommandRegistry;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 

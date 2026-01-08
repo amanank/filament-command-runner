@@ -1,6 +1,6 @@
 <?php
 
-namespace EeqanLtd\FilamentCommandRunner\Abstractions;
+namespace Amanank\FilamentCommandRunner\Abstractions;
 
 use InvalidArgumentException;
 
