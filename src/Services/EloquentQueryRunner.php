@@ -111,12 +111,15 @@ class EloquentQueryRunner {
                 continue;
             }
 
-            $filename = $file->getFilenameWithoutExtension();
-            $namespace = 'App\\Models\\' . $filename;
+            // e.g. "Admin/User.php"
+            $relative = $file->getRelativePathname();
+            $relative = substr($relative, 0, -4); // remove ".php"
+            $relative = str_replace(['/', '\\'], '\\', $relative); // normalize separators
 
-            // Only include actual Model classes
+            $namespace = rtrim(app()->getNamespace(), '\\') . '\\Models\\' . $relative;
+
             if (class_exists($namespace) && is_subclass_of($namespace, Model::class)) {
-                $models[$namespace] = $filename;
+                $models[$namespace] = class_basename($namespace);
             }
         }
 
