@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
 use InvalidArgumentException;
 use Exception;
+use Illuminate\Support\Str;
 
 /**
  * Service for safely executing Eloquent queries
@@ -113,7 +114,7 @@ class EloquentQueryRunner {
 
             // e.g. "Admin/User.php"
             $relative = $file->getRelativePathname();
-            $relative = substr($relative, 0, -4); // remove ".php"
+            $relative = Str::beforeLast($relative, '.php'); // remove extension, keep subdirectories
             $relative = str_replace(['/', '\\'], '\\', $relative); // normalize separators
 
             $namespace = rtrim(app()->getNamespace(), '\\') . '\\Models\\' . $relative;
