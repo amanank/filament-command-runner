@@ -30,7 +30,7 @@ Since the package is in your local `packages/` directory, add it as a path repos
     "repositories": [
         {
             "type": "path",
-            "url": "packages/eeqan-ltd/filament-command-runner",
+            "url": "packages/amanank/filament-command-runner",
             "options": {
                 "symlink": true
             }
@@ -42,7 +42,7 @@ Since the package is in your local `packages/` directory, add it as a path repos
 ### 2. Install via Composer
 
 ```bash
-composer require eeqan-ltd/filament-command-runner:@dev
+composer require amanank/filament-command-runner:@dev
 ```
 
 ### 3. Publish Configuration
@@ -489,3 +489,4 @@ This package is open-sourced under the MIT license.
 ## Contributing
 
 Contributions are welcome! Please submit pull requests or open issues for bugs and feature requests.
+

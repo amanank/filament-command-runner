@@ -22,6 +22,7 @@ use Filament\Actions\Contracts\HasActions;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\HtmlString;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Illuminate\Support\Facades\Artisan;
 
@@ -39,6 +40,7 @@ class CommandRunnerPage extends Page implements HasForms, HasActions {
 
     protected static ?string $navigationIcon = 'heroicon-o-command-line';
     protected static string $view = 'filament-command-runner::pages.command-runner-page';
+    protected static bool $shouldRegisterNavigation = false;
     protected static ?string $navigationGroup = null;
     protected static ?string $title = 'Run Commands';
     protected static ?string $navigationLabel = null;
@@ -51,18 +53,18 @@ class CommandRunnerPage extends Page implements HasForms, HasActions {
     public bool $isRunning = false;
 
     public function mount(): void {
-        // Set navigation properties from config on first mount
-        if (static::$navigationGroup === null) {
-            static::$navigationGroup = config('filament-command-runner.ui.navigation_group', 'System Admin');
-        }
-        if (static::$navigationLabel === null) {
-            static::$navigationLabel = config('filament-command-runner.ui.navigation_label', 'Run Commands');
-        }
-
         $this->data = [
             'selectedCommand' => null,
         ];
         $this->form->fill($this->data);
+    }
+
+    public static function getNavigationGroup(): ?string {
+        return config('filament-command-runner.ui.navigation_group', 'System Admin');
+    }
+
+    public static function getNavigationLabel(): string {
+        return config('filament-command-runner.ui.navigation_label', 'Run Commands');
     }
 
     public function form(Form $form): Form {
@@ -330,10 +332,112 @@ class CommandRunnerPage extends Page implements HasForms, HasActions {
                 $component = $component->helperText($option['help']);
             }
 
+            if ($this->selectedCommand === 'eloquent:query') {
+                if ($key === 'model') {
+                    $component = $component->helperText(fn() => $this->getEloquentModelSelectorHelp($option));
+                }
+
+                if ($key === 'query') {
+                    $component = $component->helperText(fn() => $this->getEloquentQueryHelp($option));
+                }
+            }
+
             $schema[] = $component;
         }
 
         return [Grid::make(2)->schema($schema)];
+    }
+
+    private function getEloquentModelSelectorHelp(array $option): HtmlString|string {
+        $selectedModel = $this->data['model'] ?? null;
+        $baseHelp = $option['help'] ?? 'Select the Eloquent model to query';
+
+        if (!$selectedModel) {
+            return $baseHelp;
+        }
+
+        $fields = EloquentQueryRunner::getModelFields($selectedModel);
+
+        if (empty($fields)) {
+            return $baseHelp;
+        }
+
+        $formattedFields = implode(', ', $fields);
+
+        return new HtmlString(e($baseHelp) . '<br><span class="text-xs text-gray-500">Fields: ' . e($formattedFields) . '</span>');
+    }
+
+    private function getEloquentQueryHelp(array $option): HtmlString|string {
+        $baseHelp = $option['help']
+            ?? 'Enter the Eloquent query method chain (without the model name and ::).';
+        $selectedModel = $this->data['model'] ?? null;
+
+        if (!$selectedModel) {
+            return $baseHelp;
+        }
+
+        $fields = EloquentQueryRunner::getModelFields($selectedModel);
+        $examples = array_values(array_unique([
+            ...$this->getConfiguredEloquentExamples($selectedModel),
+            ...$this->getGeneratedEloquentExamples($selectedModel, $fields),
+        ]));
+
+        $parts = ['<div>' . e($baseHelp) . '</div>'];
+
+        if (!empty($examples)) {
+            $exampleItems = collect($examples)
+                ->map(fn(string $example) => '<div><code>' . e($example) . '</code></div>')
+                ->implode('');
+
+            $parts[] = '<div class="text-xs text-gray-500 mt-1"><strong>Examples for ' . e(class_basename($selectedModel)) . ':</strong></div>';
+            $parts[] = '<div class="text-xs text-gray-500 space-y-1 mt-1">' . $exampleItems . '</div>';
+        }
+
+        return new HtmlString(implode('', $parts));
+    }
+
+    private function getConfiguredEloquentExamples(string $modelClass): array {
+        $config = config('filament-command-runner.eloquent_query.model_examples', []);
+
+        if (!is_array($config)) {
+            return [];
+        }
+
+        $examples = $config[$modelClass] ?? $config[class_basename($modelClass)] ?? [];
+
+        if (is_string($examples)) {
+            return [$examples];
+        }
+
+        if (!is_array($examples)) {
+            return [];
+        }
+
+        return array_values(array_filter($examples, fn($example) => is_string($example) && Str::of($example)->trim()->isNotEmpty()));
+    }
+
+    private function getGeneratedEloquentExamples(string $modelClass, array $fields): array {
+        $examples = [];
+        $fieldSet = array_flip($fields);
+
+        if (isset($fieldSet['last_status_confirmed_date'], $fieldSet['aims_id'], $fieldSet['name'])) {
+            $examples[] = "whereDate('last_status_confirmed_date', today())->get()->pluck('aims_id', 'name')";
+        }
+
+        if (isset($fieldSet['status'], $fieldSet['last_status_confirmed_date'], $fieldSet['aims_id'], $fieldSet['name'])) {
+            $examples[] = "where('status', 'ACTIVE')->whereNull('last_status_confirmed_date')->get(['aims_id', 'name', 'status'])";
+            $examples[] = "where('status', 'ACTIVE')->whereDate('last_status_confirmed_date', '<', today())->get(['aims_id', 'name', 'last_status_confirmed_date', 'status'])";
+        }
+
+        if (empty($examples) && isset($fieldSet['created_at'], $fieldSet['name'], $fieldSet['id'])) {
+            $examples[] = "whereDate('created_at', today())->get()->pluck('name', 'id')";
+        }
+
+        if (empty($examples) && isset($fieldSet['id'])) {
+            $examples[] = "limit(10)->get()";
+        }
+
+        return $examples;
     }
 
     /**
