@@ -6,25 +6,20 @@ use Amanank\FilamentCommandRunner\Services\CommandRegistry;
 use Amanank\FilamentCommandRunner\Services\EloquentQueryRunner;
 use Amanank\FilamentCommandRunner\Support\OutputFormatter;
 use Filament\Pages\Page;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Placeholder;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Grid;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Actions\Action as PageAction;
-use Filament\Actions\Concerns\InteractsWithActions;
-use Filament\Actions\Contracts\HasActions;
 use Filament\Notifications\Notification;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
-use Symfony\Component\Console\Output\BufferedOutput;
-use Illuminate\Support\Facades\Artisan;
 
 /**
  * Filament Page for Command Runner
@@ -35,13 +30,13 @@ use Illuminate\Support\Facades\Artisan;
  * - Real-time execution output
  * - Security checks and confirmation dialogs
  */
-class CommandRunnerPage extends Page implements HasForms, HasActions {
-    use InteractsWithForms, InteractsWithActions;
+class CommandRunnerPage extends Page implements HasForms {
+    use InteractsWithForms;
 
-    protected static ?string $navigationIcon = 'heroicon-o-command-line';
-    protected static string $view = 'filament-command-runner::pages.command-runner-page';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-command-line';
+    protected string $view = 'filament-command-runner::pages.command-runner-page';
     protected static bool $shouldRegisterNavigation = false;
-    protected static ?string $navigationGroup = null;
+    protected static string|\UnitEnum|null $navigationGroup = null;
     protected static ?string $title = 'Run Commands';
     protected static ?string $navigationLabel = null;
     protected static ?int $navigationSort = 100;
@@ -67,8 +62,8 @@ class CommandRunnerPage extends Page implements HasForms, HasActions {
         return config('filament-command-runner.ui.navigation_label', 'Run Commands');
     }
 
-    public function form(Form $form): Form {
-        return $form
+    public function form(Schema $schema): Schema {
+        return $schema
             ->schema([
                 Section::make('Command Selection')
                     ->schema([
